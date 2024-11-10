@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Screen design document generation from wireframes
+{% endblock %}
+
+{% block page_title %}
+Screen design document generation from wireframes
+{% endblock %}
+
+{% block contents %}
+<form method="post" enctype="multipart/form-data" hx-post="/" hx-target="#specification" hx-swap="innerHTML">
+
+    <input type="file" name="file" accept="image/*" required onchange="previewFile(this);">
+    <button type="submit">upload</button>
+    <p>プレビュー</p>
+    <img id="preview">
+    </from>
+    <div id="specification">
+        {% if specification%}
+        <h2>screen design document</h2>
+        <pre>{{ specification }}</pre>
+        {% endif %}
+    </div>
+    <script>
+        function previewFile(img) {
+            const fileData = new FileReader();
+            fileData.onload = (function () {
+                document.getElementById('preview').src = fileData.result;
+            });
+            fileData.readAsDataURL(img.files[0])
+            console.log(fileData.readAsDataURL(img.files[0]))
+        }
+    </script>
+    {% endblock %}
