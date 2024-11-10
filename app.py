@@ -59,7 +59,7 @@ def index():
                 ],
                 max_tokens=300,
             )
-            design_specification = response.choices[0].message
+            design_specification = response.choices[0].message.content
 
             # 部分HTMLを返す
         return render_template_string(
