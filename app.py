@@ -32,43 +32,74 @@ def upload_file(file):
         print(f"ファイルの保存中にエラーが発生しました: {e}")
 
 
+def connect_openai(file):
+    return client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "user",
+                        "content": [
+                            {"type": "text",
+                             "text": "あなたは一流のエンジニア兼コンサルタントです。画像を解析してCSV形式のみで出力してください。項目は以下のようにしてください。No.,項目名,項目ID,入力形式,必須,バリデーション,エラーメッセージ,表示順"},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": request.host_url + "uploads/" + file.filename,
+                                },
+                            },
+                        ],
+            }
+        ],
+        max_tokens=300,
+    )
+
+
+def get_generate_csv(file):
+    response = connect_openai(file)
+
+    generated_csv = ""
+    split_text = response.choices[0].message.content.split("```")
+    for text in split_text:
+        if text.split("\n")[0] == "csv":
+            generated_csv = text[4:]
+    return generated_csv
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         # file upload
         file = request.files["file"]
         if file and file.filename.endswith((".png", ".jpg", ".jpeg")):
-            upload_file(file)
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text",
-                             "text": "あなたは一流のエンジニア兼コンサルタントです。画像を解析して画面設計書を記載してください。"},
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    # "url": request.host_url + "uploads/" + file.filename,
-                                    "url": request.host_url + "uploads/" + file.filename,
-                                },
-                            },
-                        ],
-                    }
-                ],
-                max_tokens=300,
-            )
-            design_specification = response.choices[0].message.content
 
-            # 部分HTMLを返す
-        return render_template_string(
-            """
-            <h2>画面設計書</h2>
-            <pre>{{ specification }}</pre>
-            """,
-            specification=design_specification
-        )
+            design_specification = get_generate_csv(file)
+
+            if design_specification == "":
+                return render_template_string(
+                    """
+                    <h2>画面設計書の生成に失敗しました。</h2>
+                    """
+                )
+
+            table_rows = []
+            for line in design_specification.strip().split("\n"):
+                table_rows.append(line.split(","))
+
+            # テーブルのHTMLを生成（Bootstrapスタイルを適用）
+            table_html = "<table class='table table-bordered'>"
+            for row in table_rows:
+                table_html += "<tr>" + \
+                    "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
+            table_html += "</table>"
+
+            return render_template_string(
+                """
+                <h2>画面設計書</h2>
+                {{ table_html|safe }}
+                """,
+                table_html=table_html
+            )
+
     return render_template("index.html")
 
 
