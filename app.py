@@ -7,8 +7,10 @@ from supabase import create_client, Client
 import base64
 
 config = dotenv_values(".env")
-# Set API Key
-client = OpenAI(api_key=config["OPENAI_KEY"])
+# Set API Key（ローカル環境）
+# client = OpenAI(api_key=config["OPENAI_KEY"])
+# Set API Key（本番環境）
+client = OpenAI(api_key=os.getenv["OPENAI_KEY"])
 # supabase_url = config["SUPABASE_URL"]
 # supabase_anon_key = config["SUPABASE_ANON_KEY"]
 
