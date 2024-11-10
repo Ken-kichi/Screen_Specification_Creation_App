@@ -8,7 +8,7 @@ import base64
 
 config = dotenv_values(".env")
 # Set API Key
-client = OpenAI(api_key=config["OEPNAI_KEY"])
+client = OpenAI(api_key=config["OPENAI_KEY"])
 # supabase_url = config["SUPABASE_URL"]
 # supabase_anon_key = config["SUPABASE_ANON_KEY"]
 
