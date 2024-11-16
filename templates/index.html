@@ -9,27 +9,29 @@ Screen design document generation from wireframes
 {% endblock %}
 
 {% block contents %}
-<form method="post" enctype="multipart/form-data" hx-post="/" hx-target="#specification" hx-swap="innerHTML">
+<form method="post" enctype="multipart/form-data" hx-post="/" hx-target="#specification" hx-swap="innerHTML"
+    class="form-inline">
 
-    <input type="file" name="file" accept="image/*" required onchange="previewFile(this);">
-    <button type="submit">upload</button>
+    <input type="file" name="file" accept="image/*" required onchange="previewFile(this);"
+        class="form-control mb-2 mr-sm-2">
+    <button type="submit" class="btn btn-primary mb-2">アップロード</button>
     <p>プレビュー</p>
-    <img id="preview">
-    </from>
-    <div id="specification">
-        {% if specification%}
-        <h2>screen design document</h2>
-        <pre>{{ specification }}</pre>
-        {% endif %}
-    </div>
-    <script>
-        function previewFile(img) {
-            const fileData = new FileReader();
-            fileData.onload = (function () {
-                document.getElementById('preview').src = fileData.result;
-            });
-            fileData.readAsDataURL(img.files[0])
-            console.log(fileData.readAsDataURL(img.files[0]))
-        }
-    </script>
-    {% endblock %}
+    <img id="preview" width="500" class="img-fluid mb-3">
+</form>
+<div id="specification" class="mt-3">
+    {% if specification %}
+    <h2 class="text-center">画面仕様書作成アプリ</h2>
+    {{ specification }}
+    {% endif %}
+</div>
+<script>
+    function previewFile(img) {
+        const fileData = new FileReader();
+        fileData.onload = (function () {
+            document.getElementById('preview').src = fileData.result;
+        });
+        fileData.readAsDataURL(img.files[0]);
+        console.log(fileData.readAsDataURL(img.files[0]));
+    }
+</script>
+{% endblock %}

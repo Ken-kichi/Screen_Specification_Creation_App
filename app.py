@@ -1,18 +1,11 @@
 import os
 from flask import Flask, request, render_template, send_from_directory, render_template_string
-from PIL import Image
 from openai import OpenAI
 from dotenv import dotenv_values
-from supabase import create_client, Client
-import base64
+from repositories import screen_design_document
 
-config = dotenv_values(".env")
-# Set API Key（ローカル環境）
-# client = OpenAI(api_key=config["OPENAI_KEY"])
-# Set API Key（本番環境）
+# Set API Key
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
-# supabase_url = config["SUPABASE_URL"]
-# supabase_anon_key = config["SUPABASE_ANON_KEY"]
 
 
 app = Flask(__name__)
@@ -23,52 +16,23 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
 
-def upload_file(file):
-    try:
-        file_path = os.path.join(
-            app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-    except Exception as e:
-        print(f"ファイルの保存中にエラーが発生しました: {e}")
-
-
 @app.route("/", methods=["GET", "POST"])
 def index():
+
     if request.method == "POST":
         # file upload
         file = request.files["file"]
+
+        screen_design = screen_design_document(
+            file, app.config['UPLOAD_FOLDER']
+        )
+
         if file and file.filename.endswith((".png", ".jpg", ".jpeg")):
-            upload_file(file)
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text",
-                             "text": "あなたは一流のエンジニア兼コンサルタントです。画像を解析して画面設計書を記載してください。"},
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    # "url": request.host_url + "uploads/" + file.filename,
-                                    "url": request.host_url + "uploads/" + file.filename,
-                                },
-                            },
-                        ],
-                    }
-                ],
-                max_tokens=300,
-            )
-            design_specification = response.choices[0].message.content
+
+            design_specification = screen_design.get_generate_csv(file)
 
             # 部分HTMLを返す
-        return render_template_string(
-            """
-            <h2>画面設計書</h2>
-            <pre>{{ specification }}</pre>
-            """,
-            specification=design_specification
-        )
+        return render_template("index.html", specification=design_specification)
     return render_template("index.html")
 
 
