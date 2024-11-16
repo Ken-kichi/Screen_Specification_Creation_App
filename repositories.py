@@ -1,8 +1,6 @@
 import os
 from flask import Flask, request, render_template, send_from_directory, render_template_string
 from openai import OpenAI
-import csv
-import json
 from io import StringIO
 
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
@@ -41,7 +39,7 @@ class screen_design_document:
                 }
             ],
             # 開発時には出力トークンを制御して結果を確認する
-            # max_tokens=300,
+            max_tokens=1000,
         )
 
     def get_generate_csv(self, file):
