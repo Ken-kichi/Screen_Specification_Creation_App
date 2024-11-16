@@ -1,6 +1,9 @@
 import os
 from flask import Flask, request, render_template, send_from_directory, render_template_string
 from openai import OpenAI
+import csv
+import json
+from io import StringIO
 
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
@@ -45,35 +48,15 @@ class screen_design_document:
         response = self.connect_openai(file)
 
         generated_csv = ""
-        split_text = response.choices[0].message.content.split("```")
-        for text in split_text:
-            if text.split("\n")[0] == "csv":
-                generated_csv = text[4:]
+        isResult = False
+
+        while isResult == False:
+            split_text = response.choices[0].message.content.split("```")
+            for text in split_text:
+                if text.split("\n")[0] == "csv":
+                    generated_csv = text[4:]
+            if generated_csv != "":
+                isResult = True
+                break
+
         return generated_csv
-
-    def create_response_message(self, csv_text):
-        if csv_text == "":
-            return render_template_string(
-                """
-                        <h2>画面設計書の生成に失敗しました。</h2>
-                        """
-            )
-
-        table_rows = []
-        for line in csv_text.strip().split("\n"):
-            table_rows.append(line.split(","))
-
-        # テーブルのHTMLを生成（Bootstrapスタイルを適用）
-        table_html = "<table class='table table-bordered'>"
-        for row in table_rows:
-            table_html += "<tr>" + \
-                "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
-        table_html += "</table>"
-
-        return render_template_string(
-            """
-            <h2>画面設計書</h2>
-            {{ table_html|safe }}
-            """,
-            table_html=table_html
-        )
