@@ -37,7 +37,10 @@
 
     function onDownloadCSV() {
         const today = new Date();
-        const filename = `${today.now()}_screen_design_document.csv`
+        const options = { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const formatter = new Intl.DateTimeFormat('ja-JP', options);
+        const formattedDate = formatter.format(today).replace(/\//g, '-').replace(/, /g, '_').replace(/ /g, '_');
+        const filename = `${formattedDate}_screen_design_document.csv`;
         //prettier-ignore
         const csvText = document.getElementById("getted_csv").textContent;
         const blob = new Blob([csvText], { type: "text/csv" });
