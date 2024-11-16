@@ -11,11 +11,11 @@ class screen_design_document:
         self.file = file
         self.static_folder = static_folder
 
-    def upload_file(self, file):
+    def upload_file(self):
         try:
             file_path = os.path.join(
-                self.static_folder, file.filename)
-            file.save(file_path)
+                self.static_folder, self.file.filename)
+            self.file.save(file_path)
         except Exception as e:
             print(f"ファイルの保存中にエラーが発生しました: {e}")
 

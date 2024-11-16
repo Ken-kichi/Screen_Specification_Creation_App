@@ -23,6 +23,8 @@ def index():
             file, app.config['UPLOAD_FOLDER']
         )
 
+        screen_design.upload_file()
+
         if file and file.filename.endswith((".png", ".jpg", ".jpeg")):
 
             csv_data = screen_design.get_generate_csv(file)
