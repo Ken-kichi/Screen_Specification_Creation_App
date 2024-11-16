@@ -11,10 +11,6 @@ client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
-# if not uploads folder,create it.
-if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    os.makedirs(app.config['UPLOAD_FOLDER'])
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -38,6 +34,9 @@ def index():
 
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
+    # if not uploads folder,create it.
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
