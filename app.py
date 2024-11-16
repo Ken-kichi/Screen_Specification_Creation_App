@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, send_from_directory, render_template_string
+from flask import Flask, request, render_template, send_from_directory, session
 from openai import OpenAI
 from dotenv import dotenv_values
 from repositories import screen_design_document
@@ -29,10 +29,10 @@ def index():
 
         if file and file.filename.endswith((".png", ".jpg", ".jpeg")):
 
-            design_specification = screen_design.get_generate_csv(file)
+            csv_data = screen_design.get_generate_csv(file)
 
             # 部分HTMLを返す
-        return render_template("index.html", specification=design_specification)
+        return render_template("index.html", specification=csv_data)
     return render_template("index.html")
 
 

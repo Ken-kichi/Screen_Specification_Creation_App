@@ -30,18 +30,18 @@ class screen_design_document:
                     "role": "user",
                     "content": [
                             {"type": "text",
-                             "text": "あなたは一流のエンジニア兼コンサルタントです。画像を解析してCSV形式のみで出力してください。項目は以下のようにしてください。No.,項目名,項目ID,入力形式,必須,バリデーション,エラーメッセージ,表示順"},
+                             "text": "あなたは一流のエンジニア兼コンサルタントです。画像を解析してCSV形式のみで出力してください。項目は以下のようにしてください。No.,項目名,項目ID,入力形式,必須,バリデーション,エラーメッセージ,表示順,ラベル名,プレースホルダー,最大文字数,最小文字数,説明文"},
                             {
                                 "type": "image_url",
                                 "image_url": {
-                                    # "url": request.host_url + "uploads/" + file.filename,
-                                    "url": "https://mkasumi.com/archives/001/201506/8cd040908b1da6f9a7a4a1f482b32acd.jpg",
+                                    "url": request.host_url + "uploads/" + file.filename,
                                 },
                             },
                     ],
                 }
             ],
-            max_tokens=300,
+            # 開発時には出力トークンを制御して結果を確認する
+            # max_tokens=300,
         )
 
     def get_generate_csv(self, file):
