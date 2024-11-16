@@ -33,6 +33,14 @@ def index():
 
             screen_design.create_response_message(design_specification)
 
+            # 部分HTMLを返す
+        return render_template_string(
+            """
+            <h2>画面設計書</h2>
+            <pre>{{ specification }}</pre>
+            """,
+            specification=design_specification
+        )
     return render_template("index.html")
 
 

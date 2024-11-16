@@ -1,28 +1,24 @@
 {% extends 'base.html' %}
 
 {% block title %}
-画面設計書作成アプリ
+Screen design document generation from wireframes
 {% endblock %}
 
 {% block page_title %}
-画面設計書作成アプリ
+Screen design document generation from wireframes
 {% endblock %}
 
 {% block contents %}
-<form method="post" enctype="multipart/form-data" hx-post="/" hx-target="#specification" hx-swap="innerHTML"
-    class="container mt-4">
+<form method="post" enctype="multipart/form-data" hx-post="/" hx-target="#specification" hx-swap="innerHTML">
 
-    <div class="mb-3">
-        <label for="fileInput" class="form-label">画像をアップロード</label>
-        <input type="file" id="fileInput" name="file" accept="image/*" required onchange="previewFile(this);"
-            class="form-control">
-    </div>
-    <button type="submit" class="btn btn-primary">アップロード</button>
-    <p class="mt-3">プレビュー</p>
-    <div id="image-preview" hx-get="/preview" hx-target="#image-preview" hx-swap="innerHTML" class="mb-3"></div>
+    <input type="file" name="file" accept="image/*" required onchange="previewFile(this);">
+    <button type="submit">upload</button>
+    <p>プレビュー</p>
+    <img id="preview">
+    </from>
     <div id="specification">
-        {% if specification %}
-        <h2>スクリーンデザインドキュメント</h2>
+        {% if specification%}
+        <h2>screen design document</h2>
         <pre>{{ specification }}</pre>
         {% endif %}
     </div>
@@ -30,9 +26,10 @@
         function previewFile(img) {
             const fileData = new FileReader();
             fileData.onload = (function () {
-                document.getElementById('image-preview').innerHTML = '<img src="' + fileData.result + '" alt="Preview" class="img-fluid">';
+                document.getElementById('preview').src = fileData.result;
             });
             fileData.readAsDataURL(img.files[0])
+            console.log(fileData.readAsDataURL(img.files[0]))
         }
     </script>
     {% endblock %}
