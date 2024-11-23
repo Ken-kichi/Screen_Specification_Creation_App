@@ -15,8 +15,10 @@
     <input type="file" name="file" accept="image/*" required onchange="previewFile(this);"
         class="form-control my-2 mr-sm-2">
     <button type="submit" class="btn btn-primary mb-2">アップロード</button>
-    <div class="alert alert-success mt-2">プレビュー</div>
-    <img id="preview" class="img-fluid mb-3">
+    <div class="alert alert-success mt-2">
+        <h3>▼プレビュー</h3>
+        <img id="preview" class="img-fluid mb-3">
+    </div>
 </form>
 <div id="specification" class="mt-3">
     {% if specification %}
