@@ -6,7 +6,7 @@ from io import StringIO
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
 
-class screen_design_document:
+class Screen_design_document:
     def __init__(self, file, static_folder):
         self.file = file
         self.static_folder = static_folder

@@ -1,8 +1,7 @@
 import os
-from flask import Flask, request, render_template, send_from_directory, session
+from flask import Flask, request, render_template, send_from_directory
 from openai import OpenAI
-from dotenv import dotenv_values
-from repositories import screen_design_document
+from Screen_design_document import Screen_design_document
 
 # Set API Key
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
@@ -19,7 +18,7 @@ def index():
         # file upload
         file = request.files["file"]
 
-        screen_design = screen_design_document(
+        screen_design = Screen_design_document(
             file, app.config['UPLOAD_FOLDER']
         )
 
