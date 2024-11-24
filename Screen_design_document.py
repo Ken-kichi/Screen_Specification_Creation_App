@@ -63,11 +63,15 @@ class Screen_design_document:
         generated_csv = ""
         response_content = response.choices[0].message.content
         split_text = response_content.split("```")
+
         for text in split_text:
             if text.split("\n")[0] == "csv":
                 generated_csv = text[4:]
                 break
 
         if generated_csv == "":
+            generated_csv = split_text[1]
+        else:
             return response_content
+
         return generated_csv
