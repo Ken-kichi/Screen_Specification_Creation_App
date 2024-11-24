@@ -15,14 +15,14 @@
     <input type="file" name="file" accept="image/*" required onchange="previewFile(this);"
         class="form-control my-2 mr-sm-2">
     <button type="submit" class="btn btn-primary mb-2">アップロード</button>
-    <div class="alert alert-success mt-2">
-        <h3>▼プレビュー</h3>
-        <img id="preview" class="img-fluid mb-3">
+    <div class="alert alert-success mt-2 text-center">
+        <h3>▼プレビュー▼</h3>
+        <img id="preview" class="img-fluid mb-3 mx-auto d-block" style="height: 300px;">
     </div>
 </form>
 <div id="specification" class="mt-3">
     {% if specification %}
-    <h2 class="text-center">画面仕様書作成アプリ</h2>
+    <h2 class="text-center">画面仕様書CSV</h2>
     <button type="button" class="btn btn-primary my-2" onclick="onDownloadCSV()">CSVを出力する</button>
     <pre id="getted_csv"> {{ specification }}</pre>
     {% endif %}
@@ -43,7 +43,7 @@
         const formatter = new Intl.DateTimeFormat('ja-JP', options);
         const formattedDate = formatter.format(today).replace(/\//g, '-').replace(/, /g, '_').replace(/ /g, '_');
         const filename = `${formattedDate}_screen_design_document.csv`;
-        //prettier-ignore
+
         const csvText = document.getElementById("getted_csv").textContent;
         const blob = new Blob([csvText], { type: "text/csv" });
 

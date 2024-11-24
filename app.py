@@ -28,7 +28,7 @@ def index():
 
             csv_data = screen_design.get_generate_csv(file)
 
-            # 部分HTMLを返す
+        # 部分HTMLを返す
         return render_template("index.html", specification=csv_data)
     return render_template("index.html")
 
