@@ -26,7 +26,16 @@ def index():
 
         if file and file.filename.endswith((".png", ".jpg", ".jpeg")):
 
-            csv_data = screen_design.get_generate_csv(file)
+            model = "gpt-4o-mini"
+            max_tokens = 1000
+            csv_items = "No.,項目名,項目ID,入力形式,必須,バリデーション,エラーメッセージ,表示順,ラベル名,プレースホルダー,最大文字数,最小文字数,説明文"
+
+            csv_data = screen_design.get_generate_csv(
+                file,
+                model,
+                max_tokens,
+                csv_items
+            )
 
         # 部分HTMLを返す
         return render_template("index.html", specification=csv_data)
