@@ -8,7 +8,10 @@ WORKDIR /app
 COPY . /app
 
 # pipを更新
-RUN  pip install --upgrade pip
+RUN pip install --upgrade pip
+
+# openaiを更新
+RUN pip install --upgrade openai
 
 # 依存関係をインストール
 RUN pip install --no-cache-dir -r requirements.txt

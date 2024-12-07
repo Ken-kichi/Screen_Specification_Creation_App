@@ -23,19 +23,18 @@ class Screen_design_document:
             print(f"ファイルの保存中にエラーが発生しました: {e}")
 
     # OpenAI接続関数
-    def connect_openai(self, file, model, max_tokens, csv_items):
+    def connect_openai(self, file, model, max_tokens, json_items):
 
         uploaded_url = request.host_url + "uploads/" + file.filename
 
         openai_response = client.chat.completions.create(
-            model=model,
             messages=[
                 {
                     "role": "user",
                     "content": [
                         {
                             "type": "text",
-                            "text": f"あなたは一流のエンジニア兼コンサルタントです。画像を解析してCSV形式のみで出力してください。項目は以下のようにしてください。{csv_items}"
+                            "text": f"あなたは一流のエンジニア兼コンサルタントです。画像を解析して画面設計書を完成させてください。項目は以下のようにしてください。{json_items}。出力形式はjsonでお願いします。"
                         },
                         {
                             "type": "image_url",
@@ -46,32 +45,20 @@ class Screen_design_document:
                     ],
                 }
             ],
+            model=model,
+            response_format={"type": "json_object"},
             max_tokens=max_tokens,
         )
 
         return openai_response
 
     # csv出力関数
-    def get_generate_csv(self, file, model, max_tokens, csv_items):
+    def get_generate_json(self, file, model, max_tokens, json_items):
         response = self.connect_openai(
             file,
             model,
             max_tokens,
-            csv_items
+            json_items
         )
 
-        generated_csv = ""
-        response_content = response.choices[0].message.content
-        split_text = response_content.split("```")
-
-        for text in split_text:
-            if text.split("\n")[0] == "csv":
-                generated_csv = text[4:]
-                break
-
-        if generated_csv == "":
-            generated_csv = split_text[1]
-        else:
-            return response_content
-
-        return generated_csv
+        return response.choices[0].message.content

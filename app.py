@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, render_template, send_from_directory
 from openai import OpenAI
 from Screen_design_document import Screen_design_document
+import json
 
 # Set API Key
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
@@ -28,17 +29,31 @@ def index():
 
             model = "gpt-4o-mini"
             max_tokens = 1000
-            csv_items = "No.,項目名,項目ID,入力形式,必須,バリデーション,エラーメッセージ,表示順,ラベル名,プレースホルダー,最大文字数,最小文字数,説明文"
+            json_items = "No.,項目名,項目ID,入力形式,必須,エラーメッセージ,表示順,ラベル名,プレースホルダー,最大文字数,最小文字数,説明文"
 
-            csv_data = screen_design.get_generate_csv(
+            json_data = screen_design.get_generate_json(
                 file,
                 model,
                 max_tokens,
-                csv_items
+                json_items
             )
 
-        # 部分HTMLを返す
-        return render_template("index.html", specification=csv_data)
+            # 例外処理を追加
+            try:
+                dict_data = json.loads(json_data)
+                headers = dict_data["formItems"][0].keys()
+
+                csv_data = ",".join(headers) + "\n"
+                for item in dict_data["formItems"]:
+                    for value in item.values():
+                        csv_data += str(value) + ","
+                    csv_data = csv_data[:-1] + "\n"
+
+                # 部分HTMLを返す
+                return render_template("index.html", specification_header=headers, specification=dict_data["formItems"], csv_data=csv_data)
+            except Exception as e:
+                return render_template("index.html", message=f"エラー: {e}")
+
     return render_template("index.html")
 
 
