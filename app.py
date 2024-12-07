@@ -35,6 +35,7 @@ def index():
             max_attempt = 2
             csv_data = None
 
+            #二回を上限に生成データが取れるまで通信を繰り返す
             while max_attempt >= attempt:
                 try:
                     json_data = screen_design.get_generate_json(

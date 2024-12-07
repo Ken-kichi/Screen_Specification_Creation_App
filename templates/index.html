@@ -60,14 +60,13 @@
     function previewFile(img) {
         const fileData = new FileReader();
         fileData.onload = (function () {
-            document.getElementById('preview').src = fileData.result;
+            $('#preview').attr('src', fileData.result);
         });
         fileData.readAsDataURL(img.files[0]);
     }
 
     function onUpload() {
-        const spinner = document.getElementById("spinner-overlay");
-        spinner.style.display = "";
+        $('#spinner-overlay').css('display', '');
     }
 
     function onDownloadCSV() {
@@ -77,14 +76,16 @@
         const formattedDate = formatter.format(today).replace(/\//g, '-').replace(/, /g, '_').replace(/ /g, '_');
         const filename = `${formattedDate}_screen_design_document.csv`;
 
-        const csvText = document.getElementById("getted_csv").textContent;
+        const csvText = $('#getted_csv').text();
         const blob = new Blob([csvText], { type: "text/csv" });
 
-        const link = document.createElement('a')
-        link.download = filename
-        link.href = URL.createObjectURL(blob)
-        link.click()
+        const link = $('<a></a>')
+            .attr('download', filename)
+            .attr('href', URL.createObjectURL(blob))
+            .appendTo('body');
 
+        link[0].click();
+        link.remove();
     }
 </script>
 {% endblock %}
