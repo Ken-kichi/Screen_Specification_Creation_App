@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block contents %}
-<form method="post" enctype="multipart/form-data" hx-post="/" hx-target="#specification" hx-swap="innerHTML"
-    class="form-inline">
-
+<form method="post" enctype="multipart/form-data" action="/" class="form-inline">
     <input type="file" name="file" accept="image/*" required onchange="previewFile(this);"
         class="form-control my-2 mr-sm-2">
     <button type="submit" class="btn btn-primary mb-2" onclick="onUpload()">アップロード</button>
