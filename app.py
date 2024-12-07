@@ -31,28 +31,35 @@ def index():
             max_tokens = 1000
             json_items = "No.,項目名,項目ID,入力形式,必須,エラーメッセージ,表示順,ラベル名,プレースホルダー,最大文字数,最小文字数,説明文"
 
-            json_data = screen_design.get_generate_json(
-                file,
-                model,
-                max_tokens,
-                json_items
-            )
+            attempt = 0
+            max_attempt = 2
+            csv_data = None
 
-            # 例外処理を追加
-            try:
-                dict_data = json.loads(json_data)
-                headers = dict_data["formItems"][0].keys()
+            while max_attempt >= attempt:
+                try:
+                    json_data = screen_design.get_generate_json(
+                        file,
+                        model,
+                        max_tokens,
+                        json_items
+                    )
+                    dict_data = json.loads(json_data)
+                    headers = dict_data["formItems"][0].keys()
+                    if (headers):
+                        csv_data = ",".join(headers) + "\n"
+                        for item in dict_data["formItems"]:
+                            for value in item.values():
+                                csv_data += str(value) + ","
+                            csv_data = csv_data[:-1] + "\n"
+                        break
+                except Exception as e:
+                    attempt += 1
+                    print(f"エラーが発生：{e}")
 
-                csv_data = ",".join(headers) + "\n"
-                for item in dict_data["formItems"]:
-                    for value in item.values():
-                        csv_data += str(value) + ","
-                    csv_data = csv_data[:-1] + "\n"
-
-                # 部分HTMLを返す
+            if (csv_data):
                 return render_template("index.html", specification_header=headers, specification=dict_data["formItems"], csv_data=csv_data)
-            except Exception as e:
-                return render_template("index.html", message=f"エラー: {e}")
+            else:
+                return render_template("index.html", message="エラーが発生しました。")
 
     return render_template("index.html")
 

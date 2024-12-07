@@ -14,13 +14,18 @@
 
     <input type="file" name="file" accept="image/*" required onchange="previewFile(this);"
         class="form-control my-2 mr-sm-2">
-    <button type="submit" class="btn btn-primary mb-2">アップロード</button>
+    <button type="submit" class="btn btn-primary mb-2" onclick="onUpload()">アップロード</button>
     <div class="alert alert-success mt-2 text-center">
         <h3>▼プレビュー▼</h3>
         <img id="preview" class="img-fluid mb-3 mx-auto d-block" style="height: 300px;">
     </div>
 </form>
 <div id="specification" class="mt-3">
+    <div id="spinner-overlay" class="spinner-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
     {% if message %}
     <div class="alert alert-danger" role="alert">
         {{message}}
@@ -47,7 +52,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <div id="getted_csv">{{csv_data}}</div>
+    <div id="getted_csv" style="display: none;">{{csv_data}}</div>
     {% endif %}
 </div>
 
@@ -58,6 +63,11 @@
             document.getElementById('preview').src = fileData.result;
         });
         fileData.readAsDataURL(img.files[0]);
+    }
+
+    function onUpload() {
+        const spinner = document.getElementById("spinner-overlay");
+        spinner.style.display = "";
     }
 
     function onDownloadCSV() {
