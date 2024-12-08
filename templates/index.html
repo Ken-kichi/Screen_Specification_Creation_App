@@ -13,7 +13,7 @@
     <input type="file" name="file" accept="image/*" required onchange="previewFile(this);"
         class="form-control my-2 mr-sm-2">
     <button type="submit" class="btn btn-primary mb-2" onclick="onUpload()">アップロード</button>
-    <div class="alert alert-success mt-2 text-center">
+    <div id="preview_area" class="alert alert-success mt-2 text-center" style="display: none;">
         <h3>▼プレビュー▼</h3>
         <img id="preview" class="img-fluid mb-3 mx-auto d-block" style="height: 300px;">
     </div>
@@ -61,6 +61,8 @@
             $('#preview').attr('src', fileData.result);
         });
         fileData.readAsDataURL(img.files[0]);
+
+        $('#preview_area').css('display', '');
     }
 
     function onUpload() {

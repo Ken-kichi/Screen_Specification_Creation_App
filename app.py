@@ -60,7 +60,7 @@ def index():
             if (csv_data):
                 return render_template("index.html", specification_header=headers, specification=dict_data["formItems"], csv_data=csv_data)
             else:
-                return render_template("index.html", message="エラーが発生しました。")
+                return render_template("index.html", message="エラーが発生しました。もう一度アップロードしてください。")
 
     return render_template("index.html")
 
